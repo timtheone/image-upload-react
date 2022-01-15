@@ -10,7 +10,7 @@ export default function Index() {
 
   return (
     <div className="container mx-auto px-4">
-      <div className="flex justify-between">
+      <div className="flex gap-4 flex-col justify-between xs:flex-row">
         <UploadForm isUploading={isUploading} setImageFiles={setImageFiles} />
         {imageFiles.length > 0 && <Search setSearchTerm={setSearchTerm} />}
       </div>
