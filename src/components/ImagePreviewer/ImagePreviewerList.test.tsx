@@ -14,7 +14,7 @@ const file2: PreviewObject = {
   name: "test_name2",
 };
 
-describe("ImagePreviewList", () => {
+describe("ImagePreviewList Test", () => {
   test("renders preview Images", async () => {
     render(<ImagePreviewList searchTerm="" previewImages={[file, file2]} />);
 

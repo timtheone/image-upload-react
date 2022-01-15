@@ -22,7 +22,6 @@ export default function ImagePreviewer({
   const notify = () => toast("Success!");
 
   useEffect(() => {
-    let previewed = true;
     if (imageFiles.length > 0) {
       let fileReaders: Promise<PreviewObject>[] = [];
 
@@ -30,18 +29,15 @@ export default function ImagePreviewer({
         fileReaders.push(readFileAsDataUrl(image, setIsUploading));
       });
 
-      if (previewed) {
-        Promise.all(fileReaders)
-          .then((values) => {
-            setPreviewImages(values);
-            setIsUploading(false);
-          })
-          .then(() => notify());
-      }
+      Promise.all(fileReaders)
+        .then((values) => {
+          setPreviewImages(values);
+          // setTimeout(() => {
+          setIsUploading(false);
+          // }, 1500);
+        })
+        .then(() => notify());
     }
-    return () => {
-      previewed = false;
-    };
   }, [imageFiles, setIsUploading]);
 
   return (
