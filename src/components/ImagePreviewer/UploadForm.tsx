@@ -40,6 +40,7 @@ export default function UploadForm({ setImageFiles, isUploading }: Props) {
         onChange={handleUpload}
         accept="image/*"
         className="hidden"
+        disabled={isUploading}
       />
       <button
         disabled={isUploading}

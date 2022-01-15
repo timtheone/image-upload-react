@@ -1,24 +1,49 @@
-import { useState } from "react";
-import UploadForm from "./UploadForm";
+import { Dispatch, useState, useEffect, SetStateAction } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ImagePreviewList from "./ImagePreviewList";
-import Search from "./Search";
+import PreviewObject from "../../types/PreviewObject";
+import readFileAsDataUrl from "../../utils/readFileAsDataURL";
+import "./ImagePreviewer.css";
 
-export default function ImagePreviewer() {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
+type Props = {
+  setIsUploading: Dispatch<SetStateAction<boolean>>;
+  searchTerm: string;
+  imageFiles: File[];
+};
+
+export default function ImagePreviewer({
+  searchTerm,
+  imageFiles,
+  setIsUploading,
+}: Props) {
+  const [previewImages, setPreviewImages] = useState<PreviewObject[]>([]);
+
+  const notify = () => toast("Success!");
+
+  useEffect(() => {
+    if (imageFiles.length > 0) {
+      let fileReaders: Promise<PreviewObject>[] = [];
+
+      imageFiles.slice(0, imageFiles.length).forEach((image) => {
+        fileReaders.push(readFileAsDataUrl(image, setIsUploading));
+      });
+
+      Promise.all(fileReaders)
+        .then((values) => {
+          setPreviewImages(values);
+          // setTimeout(() => {
+          setIsUploading(false);
+          // }, 1500);
+        })
+        .then(() => notify());
+    }
+  }, [imageFiles, setIsUploading]);
 
   return (
-    <div className="container mx-auto px-4">
-      <div className="flex justify-between">
-        <UploadForm isUploading={isUploading} setImageFiles={setImageFiles} />
-        {imageFiles.length > 0 && <Search setSearchTerm={setSearchTerm} />}
-      </div>
-      <ImagePreviewList
-        searchTerm={searchTerm}
-        imageFiles={imageFiles}
-        setIsUploading={setIsUploading}
-      />
-    </div>
+    <>
+      <ToastContainer toastClassName={"toast"} />
+      <ImagePreviewList previewImages={previewImages} searchTerm={searchTerm} />
+    </>
   );
 }
