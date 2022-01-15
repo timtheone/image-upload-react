@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import PreviewObject from "../../types/PreviewObject";
 import readFileAsDataUrl from "../../utils/readFileAsDataURL";
 import "./ImagePreviewList.css";
+import useDebounce from "../../hooks/useDebounce";
 
 type Props = {
   setIsUploading: Dispatch<SetStateAction<boolean>>;
@@ -17,6 +18,7 @@ export default function ImagePreviewList({
   setIsUploading,
 }: Props) {
   const [previewImages, setPreviewImages] = useState<PreviewObject[]>([]);
+  const debouncedSearchTerm: string = useDebounce<string>(searchTerm, 500);
 
   const notify = () => toast("Success!");
 
