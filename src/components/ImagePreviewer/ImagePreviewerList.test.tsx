@@ -1,43 +1,32 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import ImagePreviewList from "./ImagePreviewList";
+import PreviewObject from "../../types/PreviewObject";
 
-const mockSetState = jest.fn();
+const file: PreviewObject = {
+  lastModifiedTS: 1637750176438,
+  src: "data:xml/test",
+  name: "test_name1",
+};
 
-const file = new File([new ArrayBuffer(1)], "test.png", {
-  type: "image/png",
-  lastModified: 1637750176438,
-});
-
-const file2 = new File([new ArrayBuffer(1)], "test2.png", {
-  type: "image/png",
-  lastModified: 1637750176431,
-});
+const file2: PreviewObject = {
+  lastModifiedTS: 1637750176431,
+  src: "data:xml/test2",
+  name: "test_name2",
+};
 
 describe("ImagePreviewList", () => {
-  test("renders a button for uploading images", async () => {
-    render(
-      <ImagePreviewList
-        searchTerm=""
-        imageFiles={[file, file2]}
-        setIsUploading={mockSetState}
-      />
-    );
+  test("renders preview Images", async () => {
+    render(<ImagePreviewList searchTerm="" previewImages={[file, file2]} />);
 
     await waitFor(() => {
-      const imageElement = screen.getByAltText(/test.png description/i);
+      const imageElement = screen.getByAltText(/test_name1 description/i);
       expect(imageElement).toBeInTheDocument();
     });
   });
 
   test("does not render images when none loaded", async () => {
-    render(
-      <ImagePreviewList
-        searchTerm=""
-        imageFiles={[]}
-        setIsUploading={mockSetState}
-      />
-    );
-    const imageElement = screen.queryByAltText("test.png description");
+    render(<ImagePreviewList searchTerm="" previewImages={[]} />);
+    const imageElement = screen.queryByAltText("test_name1 description");
 
     await waitFor(() => {
       expect(imageElement).toBeNull();

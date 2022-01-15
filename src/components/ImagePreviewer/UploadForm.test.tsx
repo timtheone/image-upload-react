@@ -3,7 +3,7 @@ import UploadForm from "./UploadForm";
 
 const mockSetState = jest.fn();
 
-describe("UploadForm", () => {
+describe("UploadForm test", () => {
   test("renders a button for uploading images", () => {
     render(<UploadForm setImageFiles={mockSetState} isUploading={false} />);
     const buttonElement = screen.getByText(/Upload Images/i);
