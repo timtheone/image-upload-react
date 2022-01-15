@@ -18,7 +18,7 @@ export default function ImagePreviewList({
   setIsUploading,
 }: Props) {
   const [previewImages, setPreviewImages] = useState<PreviewObject[]>([]);
-  const debouncedSearchTerm: string = useDebounce<string>(searchTerm, 500);
+  const debouncedSearchTerm: string = useDebounce<string>(searchTerm, 250);
 
   const notify = () => toast("Success!");
 
@@ -51,10 +51,10 @@ export default function ImagePreviewList({
       {previewImages.length > 0 && <p className="font-bold">Image previews:</p>}
       {previewImages
         .filter((value) => {
-          if (searchTerm !== "") {
+          if (debouncedSearchTerm !== "") {
             return value.name
               .toLocaleLowerCase()
-              .includes(searchTerm.toLocaleLowerCase());
+              .includes(debouncedSearchTerm.toLocaleLowerCase());
           } else {
             return value;
           }
